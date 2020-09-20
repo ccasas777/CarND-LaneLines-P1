@@ -15,42 +15,32 @@ To complete the project, two files will be submitted: a file containing project 
 To meet specifications in the project, take a look at the requirements in the [project rubric](https://review.udacity.com/#!/rubrics/322/view)
 
 
-Creating a Great Writeup
----
-For this project, a great writeup should provide a detailed response to the "Reflection" section of the [project rubric](https://review.udacity.com/#!/rubrics/322/view). There are three parts to the reflection:
+**GOAL**
 
-1. Describe the pipeline
-
-2. Identify any shortcomings
-
-3. Suggest possible improvements
-
-We encourage using images in your writeup to demonstrate how your pipeline works.  
-
-All that said, please be concise!  We're not looking for you to write a book here: just a brief description.
-
-You're not required to use markdown for your writeup.  If you use another method please just submit a pdf of your writeup. Here is a link to a [writeup template file](https://github.com/udacity/CarND-LaneLines-P1/blob/master/writeup_template.md). 
+The goals / steps of this project are the following:
+* Make a pipeline that finds lane lines on the road
+* Reflect on your work in a written report
 
 
-The Project
----
+### 1. Describe your pipeline. As part of the description, explain how you modified the draw_lines() function.
 
-## If you have already installed the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) you should be good to go!   If not, you should install the starter kit to get started on this project. ##
+My pipeline consisted of 5 steps. First, I converted the images to grayscale, then I use Gassuain_blur function with factor of 5 to reduction image noise. Third, the canny function find the all edges of image. Fourth, after marking the wanted region by Region_of_interest function, the hough transform find the lines. Last, I draw the lines onto original image.
 
-**Step 1:** Set up the [CarND Term1 Starter Kit](https://classroom.udacity.com/nanodegrees/nd013/parts/fbf77062-5703-404e-b60c-95b78b2f3f9e/modules/83ec35ee-1e02-48a5-bdb7-d244bd47c2dc/lessons/8c82408b-a217-4d09-b81d-1bda4c6380ef/concepts/4f1870e0-3849-43e4-b670-12e6f2d4b7a7) if you haven't already.
+In order to draw a single line on the left and right lanes, I modified the draw_lines() function by a slope factor(s). if s>0, then it's defined to the right lane. if s<0, then it's defined to the left lane. I neglect the very small and very large slope factor in this case.
+Finally, using the classified x,y datas extrapolate the lines to draw for left and right lanes separately.
 
-**Step 2:** Open the code in a Jupyter Notebook
 
-You will complete the project code in a Jupyter notebook.  If you are unfamiliar with Jupyter Notebooks, check out <A HREF="https://www.packtpub.com/books/content/basics-jupyter-notebook-and-python" target="_blank">Cyrille Rossant's Basics of Jupyter Notebook and Python</A> to get started.
+### 2. Identify potential shortcomings with your current pipeline
 
-Jupyter is an Ipython notebook where you can run blocks of code and see results interactively.  All the code for this project is contained in a Jupyter notebook. To start Jupyter in your browser, use terminal to navigate to your project directory and then run the following command at the terminal prompt (be sure you've activated your Python 3 carnd-term1 environment as described in the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) installation instructions!):
 
-`> jupyter notebook`
+One potential shortcoming would be what would happen when the marked region is settled not unproperly, the judgement would be unstable.
 
-A browser window will appear showing the contents of the current directory.  Click on the file called "P1.ipynb".  Another browser window will appear displaying the notebook.  Follow the instructions in the notebook to complete the project.  
+Another shortcoming could be the hough transform parameters, especially happening in the switched pipelines, the guilding line sometimes can't direct the line long enough to the distance. 
 
-**Step 3:** Complete the project and submit both the Ipython notebook and the project writeup
 
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
+### 3. Suggest possible improvements to your pipeline
+
+A possible improvement for the first shortcoming would be to using judgements automatically. In the case this time, we manually tune the area of region. In specific, we still need to set a well-initial parameters, but the parameters can be modified and convergent to a best paramenters though a certain judgements such as the amount of s factor. 
+
+Another potential improvement could be to cut the image to two or three frame to adapt different parameters, which can be able to endure the switched pipelines. Furthermore, by doing so, I may could challenge the "challenge case". In the near distance, the pipelines would be linear. In the far distance, the pipelines would be curve. I can utilize the different frames to adapt the different situation. 
 
